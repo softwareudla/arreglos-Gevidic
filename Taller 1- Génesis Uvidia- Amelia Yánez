@@ -1,0 +1,94 @@
+#include <stdio.h>
+
+#define NUM_EST 5
+#define NUM_ASG 3
+#define NOTA_APROBATORIA 6
+
+int main() {
+
+    float cal[NUM_EST][NUM_ASG];
+    float prom_Est[NUM_EST] = {0};
+    float prom_Asg[NUM_ASG] = {0};
+    int aprobadosPorAsignatura[NUM_ASG] = {0};
+    float calificacionAltaPorEstudiante[NUM_EST];
+    float calificacionBajaPorEstudiante[NUM_EST];
+    float calificacionAltaPorAsignatura[NUM_ASG];
+    float calificacionBajaPorAsignatura[NUM_ASG];
+    
+
+    printf("Ingrese las calificaciones de los estudiantes (5 estudiantes, 3 asignaturas):\n");
+    for (int i = 0; i < NUM_EST; i++) {
+        printf("Estudiante %d:\n", i + 1);
+        for (int j = 0; j < NUM_ASG; j++) {
+            do {
+                printf("  Asignatura %d : ", j + 1);
+                scanf("%f", &cal[i][j]);
+
+                
+                if (cal[i][j] < 0 || cal[i][j] > 10) {
+                    printf("Error: Calificación fuera de rango. Ingrese un valor entre 0 y 10.\n");
+                }
+            } while (cal[i][j] < 0 || cal[i][j] > 10); // Repetir si la calificación no es válida.
+        }
+    }
+
+    
+    for (int i = 0; i < NUM_EST; i++) {
+        float suma = 0;
+        calificacionAltaPorEstudiante[i] = cal[i][0];
+        calificacionBajaPorEstudiante[i] = cal[i][0];
+
+        for (int j = 0; j < NUM_ASG; j++) {
+            suma += cal[i][j];
+            if (cal[i][j] > calificacionAltaPorEstudiante[i]) {
+                calificacionAltaPorEstudiante[i] = cal[i][j];
+            }
+            if (cal[i][j] < calificacionBajaPorEstudiante[i]) {
+                calificacionBajaPorEstudiante[i] = cal[i][j];
+            }
+        }
+        prom_Est[i] = suma / NUM_ASG;
+    }
+
+    
+    for (int j = 0; j < NUM_ASG; j++) {
+        float suma = 0;
+        calificacionAltaPorAsignatura[j] = cal[0][j];
+        calificacionBajaPorAsignatura[j] = cal[0][j];
+
+        for (int i = 0; i < NUM_EST; i++) {
+            suma += cal[i][j];
+           
+            if (cal[i][j] > calificacionAltaPorAsignatura[j]) {
+                calificacionAltaPorAsignatura[j] = cal[i][j];
+            }
+            if (cal[i][j] < calificacionBajaPorAsignatura[j]) {
+                calificacionBajaPorAsignatura[j] = cal[i][j];
+            }
+           
+            if (cal[i][j] >= NOTA_APROBATORIA) {
+                aprobadosPorAsignatura[j]++;
+            }
+        }
+        prom_Asg[j] = suma / NUM_EST;
+    }
+
+  
+    printf("\n--- Resultados ---\n");
+
+    for (int i = 0; i < NUM_EST; i++) {
+        printf("Promedio del Estudiante %d: %.2f (Alta: %.2f, Baja: %.2f)\n", 
+                i + 1, prom_Est[i], calificacionAltaPorEstudiante[i], calificacionBajaPorEstudiante[i]);
+    }
+
+    for (int j = 0; j < NUM_ASG; j++) {
+        printf("Promedio de la Asignatura %d: %.2f (Alta: %.2f, Baja: %.2f)\n", 
+                j + 1, prom_Asg[j], calificacionAltaPorAsignatura[j], calificacionBajaPorAsignatura[j]);
+    }
+
+    for (int j = 0; j < NUM_ASG; j++) {
+        printf("Estudiantes aprobados en la Asignatura %d: %d\n", j + 1, aprobadosPorAsignatura[j]);
+    }
+
+    return 0;
+}
